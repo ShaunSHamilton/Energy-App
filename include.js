@@ -35,9 +35,9 @@ function sidebarColour() {
     let currentURL = window.location.href;
     for (let tag in page) {
         if (tag.href == currentURL) {
-            tag.style.property = 'blue';
+            tag.style.class = 'blue';
         } else {
-            tag.style.property = '';
+            tag.style.class = '';
         }
     }
 }
