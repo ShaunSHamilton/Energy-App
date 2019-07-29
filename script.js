@@ -6,9 +6,13 @@ function update() {
     gasCon = 10;
 }
 
-document.getElementById("testBt").addEventListener("click", () => {
-    update();
-})
+try {
+    document.getElementById("testBt").addEventListener("click", () => {
+        update();
+    })
+} catch (e) {
+    console.log('error caught');
+}
 
 // Get the Sidebar
 var mySidebar = document.getElementById("mySidebar");

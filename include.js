@@ -33,13 +33,14 @@ function includeHTML() {
 function sidebarColour() {
     let page = document.getElementsByTagName('a');
     let currentURL = window.location.href;
-    for (let tag in page) {
+    for (let tag of page) {
         if (tag.href == currentURL) {
-            tag.style.class = 'blue';
+            tag.className = 'bar-item button padding blue';
         } else {
-            tag.style.class = '';
+            tag.className = 'bar-item button padding';
         }
     }
 }
-sidebarColour();
+
 includeHTML();
+sidebarColour();
