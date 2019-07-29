@@ -33,9 +33,11 @@ function includeHTML() {
 function sidebarColour() {
     let page = document.getElementsByTagName('a');
     let currentURL = window.location.href;
+    console.log(pag, currentURL);
     for (let tag of page) {
         if (tag.href == currentURL) {
             tag.className = 'bar-item button padding blue';
+            console.log(tag.href, tag.className)
         } else {
             tag.className = 'bar-item button padding';
         }
