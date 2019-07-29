@@ -13,6 +13,7 @@ function includeHTML() {
                 if (this.readyState == 4) {
                     if (this.status == 200) {
                         elmnt.innerHTML = this.responseText;
+                        sidebarColour();
                     }
                     if (this.status == 404) {
                         elmnt.innerHTML = "Page not found.";
@@ -35,9 +36,11 @@ function sidebarColour() {
     let currentURL = window.location.href;
     console.log(page, currentURL);
     for (let tag of page) {
-        if (tag.href == currentURL) {
+        console.log(tag.href);
+
+        if ((tag.href == currentURL) && (tag.className.includes('bar-item button padding'))) {
             tag.className = 'bar-item button padding blue';
-            console.log(tag.href, tag.className)
+            console.log(tag.href, tag.className);
         } else {
             tag.className = 'bar-item button padding';
         }
@@ -45,4 +48,3 @@ function sidebarColour() {
 }
 
 includeHTML();
-sidebarColour();
