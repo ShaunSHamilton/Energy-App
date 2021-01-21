@@ -43,7 +43,7 @@ const Dashboard = () => {
         <div className="row-padding" style={{ margin: "0-16px" }}>
           <div className="third">
             <h5>Graph</h5>
-            <img style={{ width: "100%" }} alt="Google Regional Map" />
+            <img style={{ width: "100%" }} alt="Placeholder" />
           </div>
           <div className="twothird">
             <h5>Consumption</h5>

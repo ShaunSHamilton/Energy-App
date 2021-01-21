@@ -1,11 +1,11 @@
 import React from "react";
 
-const Taskbar = () => {
+const Taskbar = (props) => {
   return (
     <div className="bar top black large" style={{ zIndex: "4" }}>
       <button
         className="bar-item button hide-large hover-none hover-text-white"
-        onClick="open();"
+        onClick={() => props.open()}
       >
         <i className="fas fa-bars"></i>
       </button>

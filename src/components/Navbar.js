@@ -1,6 +1,6 @@
 import React from "react";
 
-const Navbar = () => {
+const Navbar = (props) => {
   return (
     <nav
       className="sidebar collapse white animate-left"
@@ -29,7 +29,7 @@ const Navbar = () => {
         <button
           href="#"
           className="bar-item button padding-16 hide-large dark-grey hover-black"
-          onClick={close()}
+          onClick={() => props.close()}
           title="close menu"
         >
           <i className="fas fa-remove"></i>  Close Menu
