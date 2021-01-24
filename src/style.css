@@ -1752,6 +1752,24 @@ a {
   }
 }
 
+@keyframes flash {
+  0% {
+    background-color: initial;
+  }
+  50% {
+    background-color: red;
+  }
+  100% {
+    background-color: initial;
+  }
+}
+
+.over-budget {
+  animation-name: flash;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
 .highlight {
   background-color: #ddd;
   color: #000;

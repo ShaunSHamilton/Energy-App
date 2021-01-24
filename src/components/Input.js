@@ -10,16 +10,19 @@ import { connect } from "react-redux";
 
 const mapDispatchToProps = {
   setName: (payload) => ({ type: TYPES.setName, payload }),
+  setAllData: (payload) => ({ type: TYPES.setAllData, payload }),
 };
 
-const Input = ({ closeInput, setName }) => {
+const Input = ({ closeInput, setName, setAllData, setIsOpenInput }) => {
   const [value, setValue] = useState("");
+  const [loginAttempt, setLoginAttempt] = useState({ text: "", error: "" });
 
   const verifyAndLogin = (input) => {
+    setLoginAttempt({ text: "Attempting to verify...", error: "" });
     (async () => {
       try {
         const res = await (
-          await fetch("http://localhost:8000/", {
+          await fetch("https://energy-app-api.herokuapp.com/", {
             method: "POST",
             mode: "cors",
             body: JSON.stringify({ input }),
@@ -31,9 +34,13 @@ const Input = ({ closeInput, setName }) => {
         if (res.verified) {
           setIsOpenInput(false);
           setName(res.name);
+          setAllData(res.data);
+        } else {
+          setLoginAttempt({ text: res.error, error: "" });
         }
       } catch (err) {
         console.error(err);
+        setLoginAttempt({ text: "Failed to verify password...", error: err });
       }
     })();
   };
@@ -44,7 +51,8 @@ const Input = ({ closeInput, setName }) => {
   };
   return (
     <form id="input" onSubmit={(e) => e.preventDefault()}>
-      <button onClick={closeInput}>X</button>
+      <button onClick={() => setIsOpenInput(false)}>X</button>
+      <h3>{loginAttempt.text}</h3>
       <label htmlFor="pass">Password</label>
       <input
         autoComplete="off"
@@ -57,7 +65,33 @@ const Input = ({ closeInput, setName }) => {
       <button id="submitBtn" onClick={() => verifyAndLogin(value)}>
         Submit
       </button>
+      {loginAttempt.error && <FullLogs error={loginAttempt.error} />}
     </form>
+  );
+};
+
+const FullLogs = ({ error }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  return (
+    <>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          marginTop: "1em",
+          height: "30px",
+        }}
+      >
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          style={{ marginLeft: "0px", marginRight: "5px" }}
+        >
+          {isExpanded ? "-" : "+"}
+        </button>
+        <p style={{ height: "30px", margin: "0px" }}>Full error...</p>
+      </div>
+      {isExpanded && <p>{`${error}`}</p>}
+    </>
   );
 };
 

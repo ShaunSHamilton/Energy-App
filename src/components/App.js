@@ -63,7 +63,7 @@ const App = ({ setUsageData, isDark }) => {
 
   useEffect(async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8080/example-response.json"); //fetch("http://localhost:8000/getData");
+      const res = await fetch("https://energy-app-api.herokuapp.com/getData"); //fetch("http://localhost:8000/getData");
       const data = await res.json();
       const uData = data.find((v) => v?.data?.usageData);
       console.log(uData);
@@ -82,7 +82,7 @@ const App = ({ setUsageData, isDark }) => {
       <Taskbar open={open} />
       <Navbar close={close} navitems={NAVITEMS} />
       <Dashboard openInput={openInput} />
-      {isOpenInput && <Input verifyAndLogin={verifyAndLogin} />}
+      {isOpenInput && <Input setIsOpenInput={setIsOpenInput} />}
       <div
         className="overlay hide-large animate-opacity"
         onClick={() => close()}

@@ -1,23 +1,37 @@
 import React from "react";
 import { connect } from "react-redux";
-import { isDarkSelector, usageDataSelector } from "../redux";
+import {
+  dailyBudgetSelector,
+  isDarkSelector,
+  usageDataSelector,
+} from "../redux";
 
 const mapStateToProps = (state) => {
   return {
     usageData: usageDataSelector(state),
     isDark: isDarkSelector(state),
+    dailyBudget: dailyBudgetSelector(state),
   };
 };
 
 // const mapDispatchToProps = { setUsageData: TYPES.setUsageData };
 
-const Dashboard = ({ openInput, usageData, isDark }) => {
+const Dashboard = ({ openInput, usageData, isDark, dailyBudget }) => {
   const electricity = roundTo2(
     usageData?.map((d) => d.usage?.electricity?.cost).reduce((a, c) => a + c, 0)
   );
   const gas = roundTo2(
     usageData?.map((d) => d.usage?.gas?.cost ?? 0).reduce((a, c) => a + c, 0)
   );
+  const days = usageData.length ?? 1;
+  const elecBudget = calcBudget(electricity, days, dailyBudget.elec);
+  const gasBudget = calcBudget(gas, days, dailyBudget.gas);
+  const combinedBudget = calcBudget(
+    gas + electricity,
+    days,
+    dailyBudget.elec + dailyBudget.gas
+  );
+
   return (
     <div className="main" style={{ marginLeft: "300px", marginTop: "43px" }}>
       <header className="container" style={{ paddingTop: "22px" }}>
@@ -112,34 +126,40 @@ const Dashboard = ({ openInput, usageData, isDark }) => {
       </div>
       <hr />
       <div className="container">
-        <h5>Budget</h5>
+        <h5>Budget for Period: {days} Days</h5>
         <p>Electricity Cost</p>
         <div className={`${isDark ? "dark-bar" : "grey"}`}>
           <div
-            className="container center padding green"
-            style={{ width: "25%" }}
+            className={`container center padding ${
+              elecBudget > 100 ? "over-budget" : "red"
+            }`}
+            style={{ width: `${calcWidth(elecBudget)}%` }}
           >
-            +25%
+            {elecBudget}%
           </div>
         </div>
 
         <p>Gas Cost</p>
         <div className={`${isDark ? "dark-bar" : "grey"}`}>
           <div
-            className="container center padding orange"
-            style={{ width: "50%" }}
+            className={`container center padding ${
+              gasBudget > 100 ? "over-budget" : "blue"
+            }`}
+            style={{ width: `${calcWidth(gasBudget)}%` }}
           >
-            50%
+            {gasBudget}%
           </div>
         </div>
 
         <p>Combined Cost</p>
         <div className={`${isDark ? "dark-bar" : "grey"}`}>
           <div
-            className="container center padding red"
-            style={{ width: "75%" }}
+            className={`container center padding ${
+              combinedBudget > 100 ? "over-budget" : "green"
+            }`}
+            style={{ width: `${calcWidth(combinedBudget)}%` }}
           >
-            75%
+            {combinedBudget}%
           </div>
         </div>
       </div>
@@ -153,6 +173,16 @@ const Dashboard = ({ openInput, usageData, isDark }) => {
 
 function roundTo2(num) {
   return Math.round((num + Number.EPSILON) * 100) / 100;
+}
+
+// TODO: Add 25% to excess budget
+
+function calcBudget(num, days, budge) {
+  return roundTo2((num / (days * budge)) * 100);
+}
+
+function calcWidth(budge) {
+  return roundTo2((budge / 125) * 100);
 }
 
 export default connect(mapStateToProps, null)(Dashboard);
