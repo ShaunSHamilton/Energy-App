@@ -1,16 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { isDarkSelector, TYPES } from "../redux";
+
 import Dashboard from "./Dashboard";
 import Navbar from "./Navbar";
-// import Settings from "./Settings";
+import Input from "./Input";
 import Taskbar from "./Taskbar";
 
-const App = () => {
+const NAVITEMS = [
+  { classes: "fa fa-history ", name: "Overview" },
+
+  { classes: "fas fa-calendar-day ", name: "Today" },
+
+  { classes: "fas fa-calendar-week ", name: "This Week" },
+
+  { classes: "fas fa-calendar-alt ", name: "This Month" },
+
+  { classes: "far fa-calendar-alt ", name: "This Year" },
+
+  { classes: "fa fa-pound-sign ", name: "Tarrifs" },
+
+  { classes: "fa fa-history ", name: "Usage" },
+];
+
+const mapStateToProps = (state) => {
+  return {
+    isDark: isDarkSelector(state),
+  };
+};
+
+const mapDispatchToProps = {
+  setUsageData: (payload) => ({ type: TYPES.setUsageData, payload }),
+};
+
+const App = ({ setUsageData, isDark }) => {
+  const [isOpenInput, setIsOpenInput] = useState(false);
   function open() {
     // Get the Sidebar
-    var mySidebar = document.getElementById("mySidebar");
+    const mySidebar = document.getElementById("mySidebar");
 
     // Get the DIV with overlay effect
-    var overlayBg = document.getElementById("myOverlay");
+    const overlayBg = document.getElementById("myOverlay");
     if (mySidebar.style.display === "block") {
       mySidebar.style.display = "none";
       overlayBg.style.display = "none";
@@ -23,18 +53,36 @@ const App = () => {
   // Close the sidebar with the close button
   function close() {
     // Get the Sidebar
-    var mySidebar = document.getElementById("mySidebar");
+    const mySidebar = document.getElementById("mySidebar");
 
     // Get the DIV with overlay effect
-    var overlayBg = document.getElementById("myOverlay");
+    const overlayBg = document.getElementById("myOverlay");
     mySidebar.style.display = "none";
     overlayBg.style.display = "none";
   }
+
+  useEffect(async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:8080/example-response.json"); //fetch("http://localhost:8000/getData");
+      const data = await res.json();
+      const uData = data.find((v) => v?.data?.usageData);
+      console.log(uData);
+      setUsageData(uData?.data?.usageData);
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  const openInput = () => {
+    setIsOpenInput(!isOpenInput);
+  };
+
   return (
-    <body id="main" className="light-grey">
+    <div className={`light-grey ${isDark ? "dark-app" : ""}`}>
       <Taskbar open={open} />
-      <Navbar close={close} />
-      <Dashboard />
+      <Navbar close={close} navitems={NAVITEMS} />
+      <Dashboard openInput={openInput} />
+      {isOpenInput && <Input verifyAndLogin={verifyAndLogin} />}
       <div
         className="overlay hide-large animate-opacity"
         onClick={() => close()}
@@ -42,8 +90,8 @@ const App = () => {
         title="close side menu"
         id="myOverlay"
       ></div>
-    </body>
+    </div>
   );
 };
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);

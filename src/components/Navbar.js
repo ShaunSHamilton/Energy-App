@@ -1,22 +1,45 @@
 import React from "react";
+import { connect } from "react-redux";
+import {
+  nameSelector,
+  locationSelector,
+  TYPES,
+  isDarkSelector,
+} from "../redux";
 
-const Navbar = (props) => {
+const mapStateToProps = (state) => {
+  return {
+    location: locationSelector(state),
+    name: nameSelector(state),
+    isDark: isDarkSelector(state),
+  };
+};
+
+const mapDispatchToProps = {
+  setLocation: (payload) => ({ type: TYPES.setLocation, payload }),
+};
+
+const Navbar = ({ navitems, close, name, setLocation, location, isDark }) => {
+  const COMMON_CLASSES = "fa-fw padding-right";
+
   return (
     <nav
-      className="sidebar collapse white animate-left"
+      className={`sidebar collapse animate-left ${
+        isDark ? "dark-nav" : "white"
+      }`}
       style={{ zIndex: "3", width: "300px" }}
       id="mySidebar"
     >
       <br />
       <div className="container row">
-        <div className="col s4">
-          <a href="#" className="circle margin-right">
+        <div className="col s1">
+          <span className="circle margin-right">
             <i className="fas fa-user"></i>
-          </a>
+          </span>
         </div>
-        <div className="col s8 bar">
+        <div className="col s10 bar">
           <span>
-            Welcome, <strong>Shaun</strong>
+            Welcome, <strong>{name}</strong>
           </span>
           <br />
         </div>
@@ -29,43 +52,29 @@ const Navbar = (props) => {
         <button
           href="#"
           className="bar-item button padding-16 hide-large dark-grey hover-black"
-          onClick={() => props.close()}
+          onClick={() => close()}
           title="close menu"
         >
           <i className="fas fa-remove"></i>  Close Menu
         </button>
-        <a href="index.html" className="bar-item button padding">
-          <i className="fa fa-history fa-fw"></i>  Overview
-        </a>
-        <a href="today.html" className="bar-item button padding">
-          <i className="fas fa-calendar-day fa-fw"></i>  Today
-        </a>
-        <a href="week.html" className="bar-item button padding">
-          <i className="fas fa-calendar-week fa-fw"></i>  This Week
-        </a>
-        <a href="month.html" className="bar-item button padding">
-          <i className="fas fa-calendar-alt fa-fw"></i>  This Month
-        </a>
-        <a href="year.html" className="bar-item button padding">
-          <i className="far fa-calendar-alt fa-fw"></i>  This Year
-        </a>
-        <a href="tarrifs.html" className="bar-item button padding">
-          <i className="fa fa-pound-sign fa-fw"></i>  Tarrifs
-        </a>
-        <a href="usage.html" className="bar-item button padding">
-          <i className="fa fa-history fa-fw"></i>  Usage
-        </a>
-        <a href="data.html" className="bar-item button padding">
-          <i className="fa fa-database fa-fw"></i>  Data
-        </a>
-        <a href="settings.html" className="bar-item button">
-          <i className="fa fa-cog fa-fw"></i> Settings
-        </a>
-        <br />
-        <br />
+        {navitems.map(({ name, classes }, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              setLocation(name);
+              close();
+            }}
+            className={`bar-item button ${
+              location === name ? "highlight" : ""
+            }`}
+          >
+            <i className={classes + COMMON_CLASSES}></i>
+            {name}
+          </button>
+        ))}
       </div>
     </nav>
   );
 };
 
-export default Navbar;
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
