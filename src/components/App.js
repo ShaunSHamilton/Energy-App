@@ -7,7 +7,7 @@ import Navbar from "./Navbar";
 import Input from "./Input";
 import Taskbar from "./Taskbar";
 
-const MODE = "dev";
+const MODE = "prod";
 const URL =
   MODE === "dev"
     ? "http://localhost:8000/getData"

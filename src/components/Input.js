@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TYPES } from "../redux";
 import { connect } from "react-redux";
 
-const MODE = "dev";
+const MODE = "prod";
 const URL =
   MODE === "dev"
     ? "http://localhost:8000"
