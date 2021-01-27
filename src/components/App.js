@@ -7,6 +7,14 @@ import Navbar from "./Navbar";
 import Input from "./Input";
 import Taskbar from "./Taskbar";
 
+const MODE = "dev";
+const URL =
+  MODE === "dev"
+    ? "http://localhost:8000/getData"
+    : MODE === "test"
+    ? "https://raw.githubusercontent.com/ShaunSHamilton/Energy-API/master/example-response.json"
+    : "https://energy-app-api.herokuapp.com/getData";
+
 const NAVITEMS = [
   { classes: "fa fa-history ", name: "Overview" },
 
@@ -63,11 +71,9 @@ const App = ({ setUsageData, isDark }) => {
 
   useEffect(async () => {
     try {
-      const res = await fetch("https://energy-app-api.herokuapp.com/getData"); //fetch("http://localhost:8000/getData");
+      const res = await fetch(URL); //fetch("");
       const data = await res.json();
-      const uData = data.find((v) => v?.data?.usageData);
-      console.log(uData);
-      setUsageData(uData?.data?.usageData);
+      setUsageData(data?.usageData);
     } catch (e) {
       console.error(e);
     }

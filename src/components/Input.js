@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import { TYPES } from "../redux";
 import { connect } from "react-redux";
 
+const MODE = "dev";
+const URL =
+  MODE === "dev"
+    ? "http://localhost:8000"
+    : "https://energy-app-api.herokuapp.com/";
+
 // const mapStateToProps = (state) => {
 //   return {
 //     location: locationSelector(state),
@@ -11,9 +17,16 @@ import { connect } from "react-redux";
 const mapDispatchToProps = {
   setName: (payload) => ({ type: TYPES.setName, payload }),
   setAllData: (payload) => ({ type: TYPES.setAllData, payload }),
+  setUsageData: (payload) => ({ type: TYPES.setUsageData, payload }),
 };
 
-const Input = ({ closeInput, setName, setAllData, setIsOpenInput }) => {
+const Input = ({
+  closeInput,
+  setName,
+  setAllData,
+  setIsOpenInput,
+  setUsageData,
+}) => {
   const [value, setValue] = useState("");
   const [loginAttempt, setLoginAttempt] = useState({ text: "", error: "" });
 
@@ -22,7 +35,7 @@ const Input = ({ closeInput, setName, setAllData, setIsOpenInput }) => {
     (async () => {
       try {
         const res = await (
-          await fetch("https://energy-app-api.herokuapp.com/", {
+          await fetch(URL, {
             method: "POST",
             mode: "cors",
             body: JSON.stringify({ input }),
@@ -31,12 +44,14 @@ const Input = ({ closeInput, setName, setAllData, setIsOpenInput }) => {
             },
           })
         ).json();
-        if (res.verified) {
+        if (res.verified && !res.error) {
           setIsOpenInput(false);
           setName(res.name);
-          setAllData(res.data);
+          setAllData(res.obj);
+          setUsageData(res.obj.usageData);
         } else {
-          setLoginAttempt({ text: res.error, error: "" });
+          setName(res.name || "Guest");
+          setLoginAttempt({ text: res.text, error: res.error });
         }
       } catch (err) {
         console.error(err);

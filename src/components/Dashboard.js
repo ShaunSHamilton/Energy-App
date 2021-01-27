@@ -18,10 +18,14 @@ const mapStateToProps = (state) => {
 
 const Dashboard = ({ openInput, usageData, isDark, dailyBudget }) => {
   const electricity = roundTo2(
-    usageData?.map((d) => d.usage?.electricity?.cost).reduce((a, c) => a + c, 0)
+    usageData
+      ?.map((d) => Number(d.usage?.electricity?.cost) ?? 0)
+      .reduce((a, c) => a + c, 0)
   );
   const gas = roundTo2(
-    usageData?.map((d) => d.usage?.gas?.cost ?? 0).reduce((a, c) => a + c, 0)
+    usageData
+      ?.map((d) => Number(d.usage?.gas?.cost) ?? 0)
+      .reduce((a, c) => a + c, 0)
   );
   const days = usageData.length ?? 1;
   const elecBudget = calcBudget(electricity, days, dailyBudget.elec);

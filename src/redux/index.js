@@ -10,6 +10,7 @@ export const initialState = {
   name: "Guest",
   usageData: [],
   dailyBudget: { elec: 1.0, gas: 1.0 },
+  allData: { account: {}, meterPoints: [], productDetails: {}, usageData: [] },
 };
 
 // ---------------------------------
@@ -22,6 +23,7 @@ export const TYPES = {
   setName: "setName",
   setUsageData: "setUsageData",
   setDailyBudget: "setDailyBudget",
+  setAllData: "setAllData",
 };
 
 // ---------------------------------
@@ -33,6 +35,7 @@ export const isDarkSelector = (state) => state.isDark;
 export const nameSelector = (state) => state.name;
 export const usageDataSelector = (state) => state.usageData;
 export const dailyBudgetSelector = (state) => state.dailyBudget;
+export const allDataSelector = (state) => state.allData;
 
 // ---------------------------------
 // REDUCER
@@ -50,6 +53,8 @@ function reducer(state = initialState, { type, payload }) {
       return { ...state, usageData: payload };
     case TYPES.setDailyBudget:
       return { ...state, dailyBudget: payload };
+    case TYPES.setAllData:
+      return { ...state, allData: payload };
     default:
       return state;
   }
