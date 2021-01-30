@@ -6,7 +6,14 @@ import {
   usageDataSelector,
 } from "../redux";
 
-const mapStateToProps = (state) => {
+import {
+  roundTo2,
+  calcBudget,
+  calcWidth,
+} from "../scripts/usageDataController";
+import { StateType, UsageDataType } from "../types";
+
+const mapStateToProps = (state: StateType) => {
   return {
     usageData: usageDataSelector(state),
     isDark: isDarkSelector(state),
@@ -19,13 +26,13 @@ const mapStateToProps = (state) => {
 const Dashboard = ({ openInput, usageData, isDark, dailyBudget }) => {
   const electricity = roundTo2(
     usageData
-      ?.map((d) => Number(d.usage?.electricity?.cost) ?? 0)
-      .reduce((a, c) => a + c, 0)
+      ?.map((d: UsageDataType) => Number(d.usage?.electricity?.cost) ?? 0)
+      .reduce((a: number, c: number) => a + c, 0)
   );
   const gas = roundTo2(
     usageData
-      ?.map((d) => Number(d.usage?.gas?.cost) ?? 0)
-      .reduce((a, c) => a + c, 0)
+      ?.map((d: UsageDataType) => Number(d.usage?.gas?.cost) ?? 0)
+      .reduce((a: number, c: number) => a + c, 0)
   );
   const days = usageData.length ?? 1;
   const elecBudget = calcBudget(electricity, days, dailyBudget.elec);
@@ -174,19 +181,5 @@ const Dashboard = ({ openInput, usageData, isDark, dailyBudget }) => {
     </div>
   );
 };
-
-function roundTo2(num) {
-  return Math.round((num + Number.EPSILON) * 100) / 100;
-}
-
-// TODO: Add 25% to excess budget
-
-function calcBudget(num, days, budge) {
-  return roundTo2((num / (days * budge)) * 100);
-}
-
-function calcWidth(budge) {
-  return roundTo2((budge / 125) * 100);
-}
 
 export default connect(mapStateToProps, null)(Dashboard);

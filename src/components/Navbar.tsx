@@ -6,8 +6,9 @@ import {
   TYPES,
   isDarkSelector,
 } from "../redux";
+import { StateType } from "../types";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateType) => {
   return {
     location: locationSelector(state),
     name: nameSelector(state),
@@ -16,7 +17,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  setLocation: (payload) => ({ type: TYPES.setLocation, payload }),
+  setLocation: (payload: string) => ({ type: TYPES.setLocation, payload }),
 };
 
 const Navbar = ({ navitems, close, name, setLocation, location, isDark }) => {
@@ -27,7 +28,7 @@ const Navbar = ({ navitems, close, name, setLocation, location, isDark }) => {
       className={`sidebar collapse animate-left ${
         isDark ? "dark-nav" : "white"
       }`}
-      style={{ zIndex: "3", width: "300px" }}
+      style={{ zIndex: 3, width: "300px" }}
       id="mySidebar"
     >
       <br />
@@ -50,14 +51,13 @@ const Navbar = ({ navitems, close, name, setLocation, location, isDark }) => {
       </div>
       <div className="bar-block">
         <button
-          href="#"
           className="bar-item button padding-16 hide-large dark-grey hover-black"
           onClick={() => close()}
           title="close menu"
         >
           <i className="fas fa-remove"></i>  Close Menu
         </button>
-        {navitems.map(({ name, classes }, i) => (
+        {navitems.map(({ name, classes }, i: number) => (
           <button
             key={i}
             onClick={() => {

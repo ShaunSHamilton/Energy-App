@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import { TYPES } from "../redux";
 import { connect } from "react-redux";
+import {
+  AccountType,
+  MeterPointsType,
+  ProductDetailsType,
+  UsageDataType,
+  UpdateResponseType,
+} from "../types";
 
-const MODE = "prod";
 const URL =
-  MODE === "dev"
+  process.env.REACT_APP_MODE === "development"
     ? "http://localhost:8000"
     : "https://energy-app-api.herokuapp.com/";
 
@@ -15,26 +21,38 @@ const URL =
 // };
 
 const mapDispatchToProps = {
-  setName: (payload) => ({ type: TYPES.setName, payload }),
-  setAllData: (payload) => ({ type: TYPES.setAllData, payload }),
-  setUsageData: (payload) => ({ type: TYPES.setUsageData, payload }),
+  setName: (payload: string) => ({ type: TYPES.setName, payload }),
+  setProductDetails: (payload: ProductDetailsType) => ({
+    type: TYPES.setProductDetails,
+    payload,
+  }),
+  setMeterPoints: (payload: MeterPointsType) => ({
+    type: TYPES.setMeterPoints,
+    payload,
+  }),
+  setAccount: (payload: AccountType) => ({ type: TYPES.setAccount, payload }),
+  setUsageData: (payload: UsageDataType) => ({
+    type: TYPES.setUsageData,
+    payload,
+  }),
 };
 
 const Input = ({
-  closeInput,
   setName,
-  setAllData,
+  setProductDetails,
+  setMeterPoints,
+  setAccount,
   setIsOpenInput,
   setUsageData,
 }) => {
   const [value, setValue] = useState("");
   const [loginAttempt, setLoginAttempt] = useState({ text: "", error: "" });
 
-  const verifyAndLogin = (input) => {
+  const verifyAndLogin = (input: string) => {
     setLoginAttempt({ text: "Attempting to verify...", error: "" });
     (async () => {
       try {
-        const res = await (
+        const res: UpdateResponseType = await (
           await fetch(URL, {
             method: "POST",
             mode: "cors",
@@ -47,7 +65,9 @@ const Input = ({
         if (res.verified && !res.error) {
           setIsOpenInput(false);
           setName(res.name);
-          setAllData(res.obj);
+          setProductDetails(res.obj.productDetails);
+          setMeterPoints(res.obj.meterPoints);
+          setAccount(res.obj.account);
           setUsageData(res.obj.usageData);
         } else {
           setName(res.name || "Guest");
@@ -60,7 +80,7 @@ const Input = ({
     })();
   };
 
-  const onChange = (e) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setValue(e?.target?.value);
   };

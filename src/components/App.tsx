@@ -6,12 +6,12 @@ import Dashboard from "./Dashboard";
 import Navbar from "./Navbar";
 import Input from "./Input";
 import Taskbar from "./Taskbar";
+import { StateType, UsageDataType } from "../types";
 
-const MODE = "prod";
 const URL =
-  MODE === "dev"
+  process.env.REACT_APP_MODE === "development"
     ? "http://localhost:8000/getData"
-    : MODE === "test"
+    : process.env.REACT_APP_MODE === "test"
     ? "https://raw.githubusercontent.com/ShaunSHamilton/Energy-API/master/example-response.json"
     : "https://energy-app-api.herokuapp.com/getData";
 
@@ -31,14 +31,17 @@ const NAVITEMS = [
   { classes: "fa fa-history ", name: "Usage" },
 ];
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateType) => {
   return {
     isDark: isDarkSelector(state),
   };
 };
 
 const mapDispatchToProps = {
-  setUsageData: (payload) => ({ type: TYPES.setUsageData, payload }),
+  setUsageData: (payload: UsageDataType) => ({
+    type: TYPES.setUsageData,
+    payload,
+  }),
 };
 
 const App = ({ setUsageData, isDark }) => {
@@ -69,14 +72,17 @@ const App = ({ setUsageData, isDark }) => {
     overlayBg.style.display = "none";
   }
 
-  useEffect(async () => {
-    try {
-      const res = await fetch(URL); //fetch("");
-      const data = await res.json();
-      setUsageData(data?.usageData);
-    } catch (e) {
-      console.error(e);
-    }
+  useEffect(() => {
+    async () => {
+      try {
+        const data: { usageData: UsageDataType } = await (
+          await fetch(URL)
+        ).json();
+        setUsageData(data?.usageData);
+      } catch (e) {
+        console.error(e);
+      }
+    };
   }, []);
 
   const openInput = () => {
