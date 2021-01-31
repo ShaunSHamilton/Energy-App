@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import {
   dailyBudgetSelector,
   isDarkSelector,
+  locationSelector,
   usageDataSelector,
 } from "../redux";
 
@@ -10,6 +11,11 @@ import {
   roundTo2,
   calcBudget,
   calcWidth,
+  overviewCalc,
+  weekCalc,
+  todayCalc,
+  monthCalc,
+  yearCalc,
 } from "../scripts/usageDataController";
 import { DailyBudgetType, StateType, UsageDataType } from "../types";
 
@@ -18,6 +24,7 @@ const mapStateToProps = (state: StateType) => {
     usageData: usageDataSelector(state),
     isDark: isDarkSelector(state),
     dailyBudget: dailyBudgetSelector(state),
+    location: locationSelector(state),
   };
 };
 
@@ -28,22 +35,45 @@ interface Props {
   usageData?: UsageDataType[];
   isDark?: boolean;
   dailyBudget?: DailyBudgetType;
+  location?: string;
 }
 
-const Dashboard = ({ openInput, usageData, isDark, dailyBudget }: Props) => {
-  const electricity = roundTo2(
-    usageData
-      ?.map((d: UsageDataType) => Number(d.usage?.electricity?.cost) ?? 0)
-      .reduce((a: number, c: number) => a + c, 0) || 0
-  );
-  const gas = roundTo2(
-    usageData
-      ?.map((d: UsageDataType) => Number(d.usage?.gas?.cost) ?? 0)
-      .reduce((a: number, c: number) => a + c, 0) || 0
-  );
+const Dashboard = ({
+  openInput,
+  usageData,
+  isDark,
+  dailyBudget,
+  location,
+}: Props) => {
+  let data;
+  let days = 1;
+  switch (location) {
+    case "Overview":
+      data = overviewCalc(usageData);
+      days = usageData?.length ?? 1;
+      break;
+    case "Today":
+      data = todayCalc(usageData);
+      break;
+    case "This Week":
+      data = weekCalc(usageData);
+      days = 7;
+      break;
+    case "This Month":
+      data = monthCalc(usageData);
+      days = 30;
+      break;
+    case "This Year":
+      data = yearCalc(usageData);
+      days = 365;
+      break;
+    default:
+      data = { electricity: 0, gas: 0 };
+      break;
+  }
+  const { electricity = 0, gas = 0 } = data;
   const dBE = dailyBudget?.elec ?? 1;
   const dBG = dailyBudget?.gas ?? 1;
-  const days = usageData?.length ?? 1;
   const elecBudget = calcBudget(electricity, days, dBE);
   const gasBudget = calcBudget(gas, days, dBG);
   const combinedBudget = calcBudget(gas + electricity, days, dBE + dBG);
@@ -73,7 +103,7 @@ const Dashboard = ({ openInput, usageData, isDark, dailyBudget }: Props) => {
               <i className="fas fa-bolt xxxlarge"></i>
             </div>
             <div className="right">
-              <h3 id="electricity-consumption">{electricity ?? "~"}</h3>
+              <h3 id="electricity-consumption">{electricity || "~"}</h3>
             </div>
             <div className="clear"></div>
             <h4>Electricity</h4>
@@ -85,7 +115,7 @@ const Dashboard = ({ openInput, usageData, isDark, dailyBudget }: Props) => {
               <i className="fas fa-fire xxxlarge"></i>
             </div>
             <div className="right">
-              <h3 id="gas-consumption">{gas ?? "~"}</h3>
+              <h3 id="gas-consumption">{gas || "~"}</h3>
             </div>
             <div className="clear"></div>
             <h4>Gas</h4>
@@ -147,7 +177,7 @@ const Dashboard = ({ openInput, usageData, isDark, dailyBudget }: Props) => {
         <div className={`${isDark ? "dark-bar" : "grey"}`}>
           <div
             className={`container center padding ${
-              elecBudget > 100 ? "over-budget" : "red"
+              elecBudget > 100 ? "over-budget-elec" : "red"
             }`}
             style={{ width: `${calcWidth(elecBudget)}%` }}
           >
@@ -159,7 +189,7 @@ const Dashboard = ({ openInput, usageData, isDark, dailyBudget }: Props) => {
         <div className={`${isDark ? "dark-bar" : "grey"}`}>
           <div
             className={`container center padding ${
-              gasBudget > 100 ? "over-budget" : "blue"
+              gasBudget > 100 ? "over-budget-gas" : "blue"
             }`}
             style={{ width: `${calcWidth(gasBudget)}%` }}
           >
@@ -171,7 +201,7 @@ const Dashboard = ({ openInput, usageData, isDark, dailyBudget }: Props) => {
         <div className={`${isDark ? "dark-bar" : "grey"}`}>
           <div
             className={`container center padding ${
-              combinedBudget > 100 ? "over-budget" : "green"
+              combinedBudget > 100 ? "over-budget-comb" : "green"
             }`}
             style={{ width: `${calcWidth(combinedBudget)}%` }}
           >

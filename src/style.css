@@ -1752,20 +1752,54 @@ a {
   }
 }
 
-@keyframes flash {
+@keyframes flash-elec {
   0% {
-    background-color: initial;
+    background-color: #f44336;
   }
   50% {
     background-color: red;
   }
   100% {
-    background-color: initial;
+    background-color: #f44336;
   }
 }
 
-.over-budget {
-  animation-name: flash;
+@keyframes flash-gas {
+  0% {
+    background-color: #2196f3;
+  }
+  50% {
+    background-color: red;
+  }
+  100% {
+    background-color: #2196f3;
+  }
+}
+
+@keyframes flash-comb {
+  0% {
+    background-color: #4caf50;
+  }
+  50% {
+    background-color: red;
+  }
+  100% {
+    background-color: #4caf50;
+  }
+}
+
+.over-budget-elec {
+  animation-name: flash-elec;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+.over-budget-gas {
+  animation-name: flash-gas;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+.over-budget-comb {
+  animation-name: flash-comb;
   animation-duration: 2s;
   animation-iteration-count: infinite;
 }

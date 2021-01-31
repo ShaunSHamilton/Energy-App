@@ -14,6 +14,7 @@
       "flowVersion": "0.53"
     }
   },
+  "react-hooks/exhaustive-deps": "off",
   "overrides": [
     {
       "files": ["*.js", "*.jsx"],
