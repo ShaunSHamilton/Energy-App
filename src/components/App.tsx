@@ -6,8 +6,9 @@ import Dashboard from "./Dashboard";
 import Navbar from "./Navbar";
 import Input from "./Input";
 import Taskbar from "./Taskbar";
-import { StateType, UsageDataType } from "../types";
+import { ActionGenericType, StateType, UsageDataType } from "../types";
 
+console.log(process.env.REACT_APP_MODE);
 const URL =
   process.env.REACT_APP_MODE === "development"
     ? "http://localhost:8000/getData"
@@ -44,14 +45,19 @@ const mapDispatchToProps = {
   }),
 };
 
-const App = ({ setUsageData, isDark }) => {
+interface Props {
+  setUsageData: ActionGenericType<UsageDataType>;
+  isDark: boolean;
+}
+
+const App = ({ setUsageData, isDark }: Props) => {
   const [isOpenInput, setIsOpenInput] = useState(false);
   function open() {
     // Get the Sidebar
-    const mySidebar = document.getElementById("mySidebar");
+    const mySidebar = document.getElementById("mySidebar") as HTMLElement;
 
     // Get the DIV with overlay effect
-    const overlayBg = document.getElementById("myOverlay");
+    const overlayBg = document.getElementById("myOverlay") as HTMLElement;
     if (mySidebar.style.display === "block") {
       mySidebar.style.display = "none";
       overlayBg.style.display = "none";
@@ -64,16 +70,16 @@ const App = ({ setUsageData, isDark }) => {
   // Close the sidebar with the close button
   function close() {
     // Get the Sidebar
-    const mySidebar = document.getElementById("mySidebar");
+    const mySidebar = document.getElementById("mySidebar") as HTMLElement;
 
     // Get the DIV with overlay effect
-    const overlayBg = document.getElementById("myOverlay");
+    const overlayBg = document.getElementById("myOverlay") as HTMLElement;
     mySidebar.style.display = "none";
     overlayBg.style.display = "none";
   }
 
   useEffect(() => {
-    async () => {
+    (async () => {
       try {
         const data: { usageData: UsageDataType } = await (
           await fetch(URL)
@@ -82,7 +88,7 @@ const App = ({ setUsageData, isDark }) => {
       } catch (e) {
         console.error(e);
       }
-    };
+    })();
   }, []);
 
   const openInput = () => {

@@ -6,6 +6,12 @@ import {
   InitialUsageData,
   StateType,
   ReducerPayloadType,
+  UsageDataType,
+  InitialDailyBudget,
+  DailyBudgetType,
+  ProductDetailsType,
+  MeterPointsType,
+  AccountType,
 } from "../types";
 // ---------------------------------
 // INITIAL APP STATE
@@ -16,7 +22,7 @@ export const initialState: StateType = {
   isDark: true,
   name: "Guest",
   usageData: [InitialUsageData],
-  dailyBudget: { elec: 1.0, gas: 1.0 },
+  dailyBudget: InitialDailyBudget,
   productDetails: InitialProductDetails,
   meterPoints: [InitialMeterPoints],
   account: InitialAccount,
@@ -61,21 +67,21 @@ function reducer(
 ): StateType {
   switch (type) {
     case TYPES.setLocation:
-      return { ...state, location: payload };
+      return { ...state, location: payload as string };
     case TYPES.setIsDark:
-      return { ...state, isDark: payload };
+      return { ...state, isDark: payload as boolean };
     case TYPES.setName:
-      return { ...state, name: payload };
+      return { ...state, name: payload as string };
     case TYPES.setUsageData:
-      return { ...state, usageData: payload };
+      return { ...state, usageData: payload as UsageDataType[] };
     case TYPES.setDailyBudget:
-      return { ...state, dailyBudget: payload };
+      return { ...state, dailyBudget: payload as DailyBudgetType };
     case TYPES.setProductDetails:
-      return { ...state, productDetails: payload };
+      return { ...state, productDetails: payload as ProductDetailsType };
     case TYPES.setMeterPoints:
-      return { ...state, meterPoints: payload };
+      return { ...state, meterPoints: payload as MeterPointsType[] };
     case TYPES.setAccount:
-      return { ...state, account: payload };
+      return { ...state, account: payload as AccountType };
     default:
       return state;
   }

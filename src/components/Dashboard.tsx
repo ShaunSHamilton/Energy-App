@@ -11,7 +11,7 @@ import {
   calcBudget,
   calcWidth,
 } from "../scripts/usageDataController";
-import { StateType, UsageDataType } from "../types";
+import { DailyBudgetType, StateType, UsageDataType } from "../types";
 
 const mapStateToProps = (state: StateType) => {
   return {
@@ -23,25 +23,30 @@ const mapStateToProps = (state: StateType) => {
 
 // const mapDispatchToProps = { setUsageData: TYPES.setUsageData };
 
-const Dashboard = ({ openInput, usageData, isDark, dailyBudget }) => {
+interface Props {
+  openInput?: () => void;
+  usageData?: UsageDataType[];
+  isDark?: boolean;
+  dailyBudget?: DailyBudgetType;
+}
+
+const Dashboard = ({ openInput, usageData, isDark, dailyBudget }: Props) => {
   const electricity = roundTo2(
     usageData
       ?.map((d: UsageDataType) => Number(d.usage?.electricity?.cost) ?? 0)
-      .reduce((a: number, c: number) => a + c, 0)
+      .reduce((a: number, c: number) => a + c, 0) || 0
   );
   const gas = roundTo2(
     usageData
       ?.map((d: UsageDataType) => Number(d.usage?.gas?.cost) ?? 0)
-      .reduce((a: number, c: number) => a + c, 0)
+      .reduce((a: number, c: number) => a + c, 0) || 0
   );
-  const days = usageData.length ?? 1;
-  const elecBudget = calcBudget(electricity, days, dailyBudget.elec);
-  const gasBudget = calcBudget(gas, days, dailyBudget.gas);
-  const combinedBudget = calcBudget(
-    gas + electricity,
-    days,
-    dailyBudget.elec + dailyBudget.gas
-  );
+  const dBE = dailyBudget?.elec ?? 1;
+  const dBG = dailyBudget?.gas ?? 1;
+  const days = usageData?.length ?? 1;
+  const elecBudget = calcBudget(electricity, days, dBE);
+  const gasBudget = calcBudget(gas, days, dBG);
+  const combinedBudget = calcBudget(gas + electricity, days, dBE + dBG);
 
   return (
     <div className="main" style={{ marginLeft: "300px", marginTop: "43px" }}>

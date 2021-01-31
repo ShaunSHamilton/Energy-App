@@ -7,10 +7,11 @@ import {
   ProductDetailsType,
   UsageDataType,
   UpdateResponseType,
+  ActionGenericType,
 } from "../types";
 
 const URL =
-  process.env.REACT_APP_MODE === "development"
+  process.env.REACT_APP_MODE === ("development" || "test")
     ? "http://localhost:8000"
     : "https://energy-app-api.herokuapp.com/";
 
@@ -26,16 +27,25 @@ const mapDispatchToProps = {
     type: TYPES.setProductDetails,
     payload,
   }),
-  setMeterPoints: (payload: MeterPointsType) => ({
+  setMeterPoints: (payload: MeterPointsType[]) => ({
     type: TYPES.setMeterPoints,
     payload,
   }),
   setAccount: (payload: AccountType) => ({ type: TYPES.setAccount, payload }),
-  setUsageData: (payload: UsageDataType) => ({
+  setUsageData: (payload: UsageDataType[]) => ({
     type: TYPES.setUsageData,
     payload,
   }),
 };
+
+interface Props {
+  setName: ActionGenericType<string>;
+  setProductDetails: ActionGenericType<ProductDetailsType>;
+  setMeterPoints: ActionGenericType<MeterPointsType[]>;
+  setAccount: ActionGenericType<AccountType>;
+  setIsOpenInput: React.Dispatch<React.SetStateAction<boolean>>;
+  setUsageData: ActionGenericType<UsageDataType[]>;
+}
 
 const Input = ({
   setName,
@@ -44,7 +54,7 @@ const Input = ({
   setAccount,
   setIsOpenInput,
   setUsageData,
-}) => {
+}: Props) => {
   const [value, setValue] = useState("");
   const [loginAttempt, setLoginAttempt] = useState({ text: "", error: "" });
 
@@ -71,7 +81,7 @@ const Input = ({
           setUsageData(res.obj.usageData);
         } else {
           setName(res.name || "Guest");
-          setLoginAttempt({ text: res.text, error: res.error });
+          setLoginAttempt({ text: res.text, error: res.error as string });
         }
       } catch (err) {
         console.error(err);
@@ -105,7 +115,7 @@ const Input = ({
   );
 };
 
-const FullLogs = ({ error }) => {
+const FullLogs = ({ error }: { error: string }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <>

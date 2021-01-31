@@ -6,7 +6,7 @@ import {
   TYPES,
   isDarkSelector,
 } from "../redux";
-import { StateType } from "../types";
+import { ActionGenericType, StateType } from "../types";
 
 const mapStateToProps = (state: StateType) => {
   return {
@@ -20,7 +20,23 @@ const mapDispatchToProps = {
   setLocation: (payload: string) => ({ type: TYPES.setLocation, payload }),
 };
 
-const Navbar = ({ navitems, close, name, setLocation, location, isDark }) => {
+interface Props {
+  navitems: { classes: string; name: string }[];
+  close: () => void;
+  name: string;
+  setLocation: ActionGenericType<string>;
+  location: string;
+  isDark: boolean;
+}
+
+const Navbar = ({
+  navitems,
+  close,
+  name,
+  setLocation,
+  location,
+  isDark,
+}: Props) => {
   const COMMON_CLASSES = "fa-fw padding-right";
 
   return (

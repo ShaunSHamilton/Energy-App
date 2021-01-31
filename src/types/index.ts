@@ -82,8 +82,8 @@ export type AccountType = {
 
 export type EnergyDataType = {
   productDetails: ProductDetailsType;
-  usageData: [UsageDataType];
-  meterPoints: [MeterPointsType];
+  usageData: UsageDataType[];
+  meterPoints: MeterPointsType[];
   account: AccountType;
 };
 
@@ -91,22 +91,26 @@ export type EnergyDataType = {
 // REDUX
 // --------------------------------------------
 
+export type DailyBudgetType = { elec: number; gas: number };
 export type StateType = {
   location: string;
   isDark: boolean;
   name: string;
-  usageData: [UsageDataType];
-  dailyBudget: { elec: number; gas: number };
+  usageData: UsageDataType[];
+  dailyBudget: DailyBudgetType;
   account: AccountType;
-  meterPoints: [MeterPointsType];
+  meterPoints: MeterPointsType[];
   productDetails: ProductDetailsType;
 };
 
 export type ReducerPayloadType =
   | string
+  | boolean
+  | AccountType
+  | DailyBudgetType
   | ProductDetailsType
-  | UsageDataType
-  | MeterPointsType;
+  | UsageDataType[]
+  | MeterPointsType[];
 
 export const InitialUnitRates: UnitRatesType = {
   Standard: 0,
@@ -194,14 +198,25 @@ export const InitialEnergyData: EnergyDataType = {
   account: InitialAccount,
 };
 
+export const InitialDailyBudget: DailyBudgetType = {
+  elec: 1.0,
+  gas: 1.0,
+};
+
 // -----------------------------------------------------
 // SERVER DATA TYPES
 // -----------------------------------------------------
 
 export type UpdateResponseType = {
-  name: string | undefined;
+  name: string;
   verified: boolean;
   obj: EnergyDataType;
   text: string;
   error: string | undefined;
 };
+
+// -----------------------------------------------------
+// DISPATCH ACTION TYPES
+// -----------------------------------------------------
+
+export type ActionGenericType<T> = (payload: T) => { payload: T; type: string };
