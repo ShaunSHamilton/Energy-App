@@ -85,6 +85,7 @@ export type EnergyDataType = {
   usageData: UsageDataType[];
   meterPoints: MeterPointsType[];
   account: AccountType;
+  dateModified: string;
 };
 
 // --------------------------------------------
@@ -196,6 +197,7 @@ export const InitialEnergyData: EnergyDataType = {
   usageData: [InitialUsageData],
   meterPoints: [InitialMeterPoints],
   account: InitialAccount,
+  dateModified: "2021-01-01T00:00:00.000Z",
 };
 
 export const InitialDailyBudget: DailyBudgetType = {
