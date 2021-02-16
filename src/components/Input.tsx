@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { TYPES } from "../redux";
 import { connect } from "react-redux";
 import {
   AccountType,
@@ -8,6 +7,8 @@ import {
   UsageDataType,
   UpdateResponseType,
   ActionGenericType,
+  ActionTypes,
+  ReducerPayloadType,
 } from "../types";
 
 const URL =
@@ -22,18 +23,24 @@ const URL =
 // };
 
 const mapDispatchToProps = {
-  setName: (payload: string) => ({ type: TYPES.setName, payload }),
-  setProductDetails: (payload: ProductDetailsType) => ({
-    type: TYPES.setProductDetails,
+  setName: (payload: string): ReducerPayloadType => ({
+    type: ActionTypes.setName,
     payload,
   }),
-  setMeterPoints: (payload: MeterPointsType[]) => ({
-    type: TYPES.setMeterPoints,
+  setProductDetails: (payload: ProductDetailsType): ReducerPayloadType => ({
+    type: ActionTypes.setProductDetails,
     payload,
   }),
-  setAccount: (payload: AccountType) => ({ type: TYPES.setAccount, payload }),
-  setUsageData: (payload: UsageDataType[]) => ({
-    type: TYPES.setUsageData,
+  setMeterPoints: (payload: MeterPointsType[]): ReducerPayloadType => ({
+    type: ActionTypes.setMeterPoints,
+    payload,
+  }),
+  setAccount: (payload: AccountType): ReducerPayloadType => ({
+    type: ActionTypes.setAccount,
+    payload,
+  }),
+  setUsageData: (payload: UsageDataType[]): ReducerPayloadType => ({
+    type: ActionTypes.setUsageData,
     payload,
   }),
 };

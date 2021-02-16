@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { isDarkSelector, TYPES } from "../redux";
+import { isDarkSelector } from "../redux";
 
 import Dashboard from "./Dashboard";
 import Navbar from "./Navbar";
 import Input from "./Input";
 import Taskbar from "./Taskbar";
-import { ActionGenericType, StateType, UsageDataType } from "../types";
+import {
+  ActionGenericType,
+  ActionTypes,
+  ReducerPayloadType,
+  StateType,
+  UsageDataType,
+} from "../types";
 
 console.log(process.env.REACT_APP_MODE);
 const URL =
@@ -39,14 +45,14 @@ const mapStateToProps = (state: StateType) => {
 };
 
 const mapDispatchToProps = {
-  setUsageData: (payload: UsageDataType) => ({
-    type: TYPES.setUsageData,
+  setUsageData: (payload: UsageDataType[]): ReducerPayloadType => ({
+    type: ActionTypes.setUsageData,
     payload,
   }),
 };
 
 interface Props {
-  setUsageData: ActionGenericType<UsageDataType>;
+  setUsageData: ActionGenericType<UsageDataType[]>;
   isDark: boolean;
 }
 
@@ -81,7 +87,7 @@ const App = ({ setUsageData, isDark }: Props) => {
   useEffect(() => {
     (async () => {
       try {
-        const data: { usageData: UsageDataType } = await (
+        const data: { usageData: UsageDataType[] } = await (
           await fetch(URL)
         ).json();
         setUsageData(data?.usageData);

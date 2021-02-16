@@ -104,14 +104,29 @@ export type StateType = {
   productDetails: ProductDetailsType;
 };
 
+export const enum ActionTypes {
+  setLocation = "setLocation",
+  setIsDark = "setIsDark",
+  setName = "setName",
+  setUsageData = "setUsageData",
+  setDailyBudget = "setDailyBudget",
+  setProductDetails = "setProductDetails",
+  setMeterPoints = "setMeterPoints",
+  setAccount = "setAccount",
+}
+
 export type ReducerPayloadType =
-  | string
-  | boolean
-  | AccountType
-  | DailyBudgetType
-  | ProductDetailsType
-  | UsageDataType[]
-  | MeterPointsType[];
+  | { type: ActionTypes.setLocation; payload: StateType["location"] }
+  | { type: ActionTypes.setIsDark; payload: StateType["isDark"] }
+  | { type: ActionTypes.setName; payload: StateType["name"] }
+  | { type: ActionTypes.setUsageData; payload: StateType["usageData"] }
+  | { type: ActionTypes.setDailyBudget; payload: StateType["dailyBudget"] }
+  | {
+      type: ActionTypes.setProductDetails;
+      payload: StateType["productDetails"];
+    }
+  | { type: ActionTypes.setMeterPoints; payload: StateType["meterPoints"] }
+  | { type: ActionTypes.setAccount; payload: StateType["account"] };
 
 export const InitialUnitRates: UnitRatesType = {
   Standard: 0,
@@ -221,4 +236,4 @@ export type UpdateResponseType = {
 // DISPATCH ACTION TYPES
 // -----------------------------------------------------
 
-export type ActionGenericType<T> = (payload: T) => { payload: T; type: string };
+export type ActionGenericType<T> = (payload: T) => ReducerPayloadType; //{ payload: T; type: string };

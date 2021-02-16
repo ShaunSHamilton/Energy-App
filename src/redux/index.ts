@@ -6,12 +6,7 @@ import {
   InitialUsageData,
   StateType,
   ReducerPayloadType,
-  UsageDataType,
   InitialDailyBudget,
-  DailyBudgetType,
-  ProductDetailsType,
-  MeterPointsType,
-  AccountType,
 } from "../types";
 // ---------------------------------
 // INITIAL APP STATE
@@ -63,25 +58,25 @@ export const dailyBudgetSelector = (state: StateType) => state.dailyBudget;
 
 function reducer(
   state: StateType = initialState,
-  { type, payload }: { type: string; payload: ReducerPayloadType }
+  action: ReducerPayloadType
 ): StateType {
-  switch (type) {
-    case TYPES.setLocation:
-      return { ...state, location: payload as string };
-    case TYPES.setIsDark:
-      return { ...state, isDark: payload as boolean };
-    case TYPES.setName:
-      return { ...state, name: payload as string };
-    case TYPES.setUsageData:
-      return { ...state, usageData: payload as UsageDataType[] };
-    case TYPES.setDailyBudget:
-      return { ...state, dailyBudget: payload as DailyBudgetType };
-    case TYPES.setProductDetails:
-      return { ...state, productDetails: payload as ProductDetailsType };
-    case TYPES.setMeterPoints:
-      return { ...state, meterPoints: payload as MeterPointsType[] };
-    case TYPES.setAccount:
-      return { ...state, account: payload as AccountType };
+  switch (action.type) {
+    case "setLocation":
+      return { ...state, location: action.payload };
+    case "setIsDark":
+      return { ...state, isDark: action.payload };
+    case "setName":
+      return { ...state, name: action.payload };
+    case "setUsageData":
+      return { ...state, usageData: action.payload };
+    case "setDailyBudget":
+      return { ...state, dailyBudget: action.payload };
+    case "setProductDetails":
+      return { ...state, productDetails: action.payload };
+    case "setMeterPoints":
+      return { ...state, meterPoints: action.payload };
+    case "setAccount":
+      return { ...state, account: action.payload };
     default:
       return state;
   }

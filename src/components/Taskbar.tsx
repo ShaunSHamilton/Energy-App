@@ -1,7 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import { isDarkSelector, TYPES } from "../redux";
-import { ActionGenericType, StateType } from "../types";
+import { isDarkSelector } from "../redux";
+import {
+  ActionGenericType,
+  ActionTypes,
+  ReducerPayloadType,
+  StateType,
+} from "../types";
 
 const mapStateToProps = (state: StateType) => {
   return {
@@ -10,7 +15,10 @@ const mapStateToProps = (state: StateType) => {
 };
 
 const mapDispatchToProps = {
-  setIsDark: (payload: boolean) => ({ type: TYPES.setIsDark, payload }),
+  setIsDark: (payload: boolean): ReducerPayloadType => ({
+    type: ActionTypes.setIsDark,
+    payload,
+  }),
 };
 
 interface Props {

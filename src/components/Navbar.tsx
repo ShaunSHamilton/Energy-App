@@ -1,12 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
+import { nameSelector, locationSelector, isDarkSelector } from "../redux";
 import {
-  nameSelector,
-  locationSelector,
-  TYPES,
-  isDarkSelector,
-} from "../redux";
-import { ActionGenericType, StateType } from "../types";
+  ActionGenericType,
+  ActionTypes,
+  StateType,
+  ReducerPayloadType,
+} from "../types";
 
 const mapStateToProps = (state: StateType) => {
   return {
@@ -17,7 +17,10 @@ const mapStateToProps = (state: StateType) => {
 };
 
 const mapDispatchToProps = {
-  setLocation: (payload: string) => ({ type: TYPES.setLocation, payload }),
+  setLocation: (payload: string): ReducerPayloadType => ({
+    type: ActionTypes.setLocation,
+    payload,
+  }),
 };
 
 interface Props {
