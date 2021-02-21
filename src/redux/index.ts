@@ -7,6 +7,7 @@ import {
   StateType,
   ReducerPayloadType,
   InitialDailyBudget,
+  ActionTypes,
 } from "../types";
 // ---------------------------------
 // INITIAL APP STATE
@@ -16,26 +17,13 @@ export const initialState: StateType = {
   location: "Overview",
   isDark: true,
   name: "Guest",
+  dateCounter: 0,
+  selectedDate: null,
   usageData: [InitialUsageData],
   dailyBudget: InitialDailyBudget,
   productDetails: InitialProductDetails,
   meterPoints: [InitialMeterPoints],
   account: InitialAccount,
-};
-
-// ---------------------------------
-// ACTION TYPES
-// ---------------------------------
-
-export const TYPES = {
-  setLocation: "setLocation",
-  setIsDark: "setIsDark",
-  setName: "setName",
-  setUsageData: "setUsageData",
-  setDailyBudget: "setDailyBudget",
-  setProductDetails: "setProductDetails",
-  setMeterPoints: "setMeterPoints",
-  setAccount: "setAccount",
 };
 
 // ---------------------------------
@@ -45,6 +33,8 @@ export const TYPES = {
 export const locationSelector = (state: StateType) => state.location;
 export const isDarkSelector = (state: StateType) => state.isDark;
 export const nameSelector = (state: StateType) => state.name;
+export const dateCounterSelector = (state: StateType) => state.dateCounter;
+export const selectedDateSelector = (state: StateType) => state.selectedDate;
 export const usageDataSelector = (state: StateType) => state.usageData;
 export const productDetailsSelector = (state: StateType) =>
   state.productDetails;
@@ -61,21 +51,25 @@ function reducer(
   action: ReducerPayloadType
 ): StateType {
   switch (action.type) {
-    case "setLocation":
+    case ActionTypes.setLocation:
       return { ...state, location: action.payload };
-    case "setIsDark":
+    case ActionTypes.setIsDark:
       return { ...state, isDark: action.payload };
-    case "setName":
+    case ActionTypes.setName:
       return { ...state, name: action.payload };
-    case "setUsageData":
+    case ActionTypes.setDateCounter:
+      return { ...state, dateCounter: action.payload };
+    case ActionTypes.setSelectedDate:
+      return { ...state, selectedDate: action.payload };
+    case ActionTypes.setUsageData:
       return { ...state, usageData: action.payload };
-    case "setDailyBudget":
+    case ActionTypes.setDailyBudget:
       return { ...state, dailyBudget: action.payload };
-    case "setProductDetails":
+    case ActionTypes.setProductDetails:
       return { ...state, productDetails: action.payload };
-    case "setMeterPoints":
+    case ActionTypes.setMeterPoints:
       return { ...state, meterPoints: action.payload };
-    case "setAccount":
+    case ActionTypes.setAccount:
       return { ...state, account: action.payload };
     default:
       return state;

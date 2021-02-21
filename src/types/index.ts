@@ -97,6 +97,8 @@ export type StateType = {
   location: string;
   isDark: boolean;
   name: string;
+  dateCounter: number;
+  selectedDate: string | null;
   usageData: UsageDataType[];
   dailyBudget: DailyBudgetType;
   account: AccountType;
@@ -104,10 +106,12 @@ export type StateType = {
   productDetails: ProductDetailsType;
 };
 
-export const enum ActionTypes {
+export enum ActionTypes {
   setLocation = "setLocation",
   setIsDark = "setIsDark",
   setName = "setName",
+  setDateCounter = "setDateCounter",
+  setSelectedDate = "setSelectedDate",
   setUsageData = "setUsageData",
   setDailyBudget = "setDailyBudget",
   setProductDetails = "setProductDetails",
@@ -119,6 +123,8 @@ export type ReducerPayloadType =
   | { type: ActionTypes.setLocation; payload: StateType["location"] }
   | { type: ActionTypes.setIsDark; payload: StateType["isDark"] }
   | { type: ActionTypes.setName; payload: StateType["name"] }
+  | { type: ActionTypes.setDateCounter; payload: StateType["dateCounter"] }
+  | { type: ActionTypes.setSelectedDate; payload: StateType["selectedDate"] }
   | { type: ActionTypes.setUsageData; payload: StateType["usageData"] }
   | { type: ActionTypes.setDailyBudget; payload: StateType["dailyBudget"] }
   | {
